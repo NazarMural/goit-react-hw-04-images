@@ -1,45 +1,46 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Header, Input } from './Searchbar.styled';
 
-class Searchbar extends Component {
-  state = {
-    searchSubject: '',
-  };
+export default function Searchbar({ fetchFirstImages }) {
+  const [searchSubject, setSearchSubject] = useState('');
 
-  handleChange = e => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    switch (name) {
+      case 'searchSubject': {
+        setSearchSubject(value);
+        break;
+      }
+      default:
+        break;
+    }
   };
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    this.props.fetchFirstImages(this.state.searchSubject);
-    this.setState({ searchSubject: '' });
+    fetchFirstImages(searchSubject);
+    setSearchSubject('');
   };
 
-  render() {
-    return (
-      <Header>
-        <form onSubmit={this.handleSubmit}>
-          <Button type="submit">
-            <span>Search</span>
-          </Button>
+  return (
+    <Header>
+      <form onSubmit={handleSubmit}>
+        <Button type="submit">
+          <span>Search</span>
+        </Button>
 
-          <Input
-            type="text"
-            name="searchSubject"
-            value={this.state.searchSubject}
-            placeholder="Search images and photos"
-            onChange={this.handleChange}
-          />
-        </form>
-      </Header>
-    );
-  }
+        <Input
+          type="text"
+          name="searchSubject"
+          value={searchSubject}
+          placeholder="Search images and photos"
+          onChange={handleChange}
+        />
+      </form>
+    </Header>
+  );
 }
-
-export default Searchbar;
 
 Searchbar.propTypes = {
   fetchFirstImages: PropTypes.func.isRequired,
